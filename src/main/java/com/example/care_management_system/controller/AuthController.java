@@ -38,7 +38,9 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // Signup endpoint
+//    @Autowired
+//    private EmailService emailService;
+
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
@@ -46,10 +48,14 @@ public class AuthController {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+
+//        String subject = "Welcome to Care Management System!";
+//        String text = "Hi " + user.getName() + ",\n\nYour account has been created successfully!";
+//        emailService.sendMail(user.getEmail(), subject, text);
+
         return ResponseEntity.ok("User registered successfully");
     }
 
-    // Login endpoint
     @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody AuthRequest authRequest) throws BadCredentialsException  {
         try {
@@ -68,6 +74,11 @@ public class AuthController {
         long expiryMillis = expirationDate.getTime();
 
         JwtResponse response = new JwtResponse(jwt, expiryMillis);
+
+//        String subject = "Welcome to Care Management System!";
+//        String text = "Hi " + user.getName() + ",\n\nYour account has been created successfully!";
+//        emailService.sendMail(user.getEmail(), subject, text);
+
         return ResponseEntity.ok(response);
     }
 
