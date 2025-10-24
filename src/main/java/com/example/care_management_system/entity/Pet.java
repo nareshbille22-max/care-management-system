@@ -1,5 +1,6 @@
 package com.example.care_management_system.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
@@ -7,25 +8,34 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Data
-@Table(name = "users")
+@Table(name = "pets")
 @EntityListeners(AuditingEntityListener.class)
-public class User {
+public class Pet {
 
     @Id
     @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false)
     private UUID id;
 
-    @Column(unique = true, nullable = false)
-    private String email;
-
     private String name;
-    private String password;
+
+    private String type; // e.g., Dog, Cat
+
+    @Column(nullable = true)
+    private String breed; // optional, default null
+
+    private String gender;
+
+    private Integer age; // retained from previous version
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
+    private User user;
 
     @CreatedDate
     @Column(updatable = false)
@@ -34,9 +44,8 @@ public class User {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FamilyMember> familyMembers;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Pet> pets;
+    @Transient
+    public UUID getUserId() {
+        return user != null ? user.getId() : null;
+    }
 }
