@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: care-management-system
+    env: docker
+    plan: starter
+    dockerfilePath: Dockerfile
+    branch: master
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: "prod"
+      - key: SPRING_DATASOURCE_URL
+        value: "jdbc:postgresql://dpg-d3tqaindiees73dp6oag-a.oregon-postgres.render.com:5432/care_management"
+      - key: SPRING_DATASOURCE_USERNAME
+        value: "care_management_user"
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: "8BVymKUvMEvrPUGj6WlHdUvS6gcUd1NS"
+      - key: SPRING_MAIL_HOST
+        value: "smtp.gmail.com"
+      - key: SPRING_MAIL_PORT
+        value: "587"
+      - key: SPRING_MAIL_USERNAME
+        value: "maddurianji5@gmail.com"
+      - key: SPRING_MAIL_PASSWORD
+        value: "qejl larg xedl ezsl"
+      - key: SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH
+        value: "true"
+      - key: SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE
+        value: "true"
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar /app/target/care-management-system-0.0.1-SNAPSHOT.jar
