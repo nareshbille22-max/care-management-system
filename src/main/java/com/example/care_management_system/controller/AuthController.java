@@ -5,6 +5,7 @@ import com.example.care_management_system.dto.JwtResponse;
 import com.example.care_management_system.entity.User;
 import com.example.care_management_system.repository.UserRepository;
 import com.example.care_management_system.security.JwtUtil;
+import com.example.care_management_system.service.EmailService;
 import com.example.care_management_system.service.MyUserDetailsService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @RestController
@@ -38,8 +40,8 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-//    @Autowired
-//    private EmailService emailService;
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
@@ -49,9 +51,10 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
 
-//        String subject = "Welcome to Care Management System!";
-//        String text = "Hi " + user.getName() + ",\n\nYour account has been created successfully!";
-//        emailService.sendMail(user.getEmail(), subject, text);
+        String subject = "Welcome to Care Management System!";
+        String text = "Hi " + user.getName() + ",\n\nYour account has been created successfully!";
+        //emailService.sendMail(user.getEmail(), subject, text);
+        emailService.sendMail("nareshbille22@gmail.com", subject, text);
 
         return ResponseEntity.ok("User registered successfully");
     }
@@ -75,9 +78,10 @@ public class AuthController {
 
         JwtResponse response = new JwtResponse(jwt, expiryMillis);
 
-//        String subject = "Welcome to Care Management System!";
-//        String text = "Hi " + user.getName() + ",\n\nYour account has been created successfully!";
-//        emailService.sendMail(user.getEmail(), subject, text);
+        String subject = "Login alert for "+ authRequest.getEmail();
+        String text = "New login detected.." + "\n\n DateTime : " + LocalDateTime.now().toString();
+        //emailService.sendMail(authRequest.getEmail(), subject, text);
+        emailService.sendMail("nareshbille22@gmail.com", subject, text);
 
         return ResponseEntity.ok(response);
     }

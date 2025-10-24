@@ -31,7 +31,6 @@ public class FamilyMemberController {
         return ResponseEntity.ok(new ApiResponse<>(familyMember));
     }
 
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFamilyMember(@PathVariable UUID id) {
         familyMemberService.deleteFamilyMember(id);
