@@ -1,5 +1,6 @@
 package com.example.care_management_system;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -9,7 +10,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class CareManagementSystemApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CareManagementSystemApplication.class, args);
+        Dotenv dotenv = Dotenv.load();
+        SpringApplication.run(CareManagementSystemApplication.class, args);
 	}
 
 }
