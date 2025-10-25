@@ -79,7 +79,7 @@ public class AuthController {
         JwtResponse response = new JwtResponse(jwt, expiryMillis);
 
         String subject = "Login alert for "+ authRequest.getEmail();
-        String text = "New login detected.." + "\n\n DateTime : " + LocalDateTime.now().toString();
+        String text = "New login detected.." + "\n\n DateTime : " + LocalDateTime.now();
         //emailService.sendMail(authRequest.getEmail(), subject, text);
         emailService.sendMail("nareshbille22@gmail.com", subject, text);
 
