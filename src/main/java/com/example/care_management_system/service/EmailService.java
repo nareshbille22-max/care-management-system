@@ -38,15 +38,24 @@ public class EmailService {
     @Async
     public void sendEmail(String email, String name, String event, String url) throws MessagingException {
         switch (event) {
-            case "register" -> sendRegistrationEmail(email, name, "http://");
-            case "login" -> {
+            case "signup-success" -> {
+                sendRegistrationSuccessEmail(email, name, url);
+                logger.info("Registration success mail sent to : {}", email);
+            }
+            case "login-success" -> {
                 LocalDateTime localDateTime = LocalDateTime.now();
                 String ipAddress = ClientAddress.getClientIp();
                 sendLoginAlertEmail(email, name, String.valueOf(localDateTime), ipAddress);
+                logger.info("Login alert mail sent to : {}", email);
             }
             case "forgot-password" -> {
                 sendForgotPasswordEmail(email, name, url);
-                logger.info("Reset Url : {}", url);
+                logger.info("Reset password mail sent to : {}", email);
+                logger.info("Password reset link : {}", url);
+            }
+            case "reset-password-success" -> {
+                sendForgotPasswordEmail(email, name, url);
+                logger.info("Reset password success mail sent to : {}", email);
             }
         }
     }
@@ -76,14 +85,14 @@ public class EmailService {
         }
     }
 
-    public void sendRegistrationEmail(String to, String name, String dashboardUrl) throws MessagingException {
+    public void sendRegistrationSuccessEmail(String to, String name, String loginUrl) throws MessagingException {
         Map<String, Object> model = Map.of(
                 "subject", "Registration Successful",
                 "title", "Welcome to CareBuddy!",
                 "name", name,
                 "message", "Your registration was successful! We are excited to help you take care of your loved ones and pets while you focus on your work or travels.",
                 "buttonText", "Go to Dashboard",
-                "dashboardUrl", dashboardUrl
+                "dashboardUrl", loginUrl
         );
         sendHtmlMail(to, "Registration Successful", "registration-success.html", model);
     }
@@ -111,5 +120,18 @@ public class EmailService {
         );
         sendHtmlMail(to, "Reset Your Password", "forgot-password.html", model);
     }
+
+    public void sendPasswordResetSuccessEmail(String to, String name, String loginUrl) throws MessagingException {
+        Map<String, Object> model = Map.of(
+                "subject", "Password Reset Successful",
+                "title", "Password Reset Successful",
+                "name", name,
+                "message", "Your password for CareBuddy has been reset successfully. You can now log in to your account using your new password.",
+                "buttonText", "Login Now",
+                "loginUrl", loginUrl
+        );
+        sendHtmlMail(to, "Password Reset Successful", "reset-success.html", model);
+    }
+
 
 }

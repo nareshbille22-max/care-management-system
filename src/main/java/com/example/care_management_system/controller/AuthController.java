@@ -12,6 +12,7 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -50,6 +51,9 @@ public class AuthController {
     @Autowired
     private EmailService emailService;
 
+    @Value("${app.base.url}")
+    private String baseUrl;
+
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody User user) throws MessagingException {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
@@ -59,7 +63,8 @@ public class AuthController {
 
         userRepository.save(user);
 
-        emailService.sendEmail(user.getEmail(), user.getName(), "register", "");
+        String loginUrl = baseUrl + "/login";
+        emailService.sendEmail(user.getEmail(), user.getName(), "signup-success", loginUrl);
 
         return ResponseEntity.ok("User registered successfully");
     }
@@ -84,7 +89,8 @@ public class AuthController {
 
         Optional<User> user = userRepository.findByEmail(jwtUtil.extractUsername(jwt));
 
-        emailService.sendEmail(authRequest.getEmail(), user.get().getName(), "login", "");
+        String loginUrl = baseUrl + "/reset-password";
+        emailService.sendEmail(authRequest.getEmail(), user.get().getName(), "login-success", loginUrl);
 
         return ResponseEntity.ok(response);
     }
@@ -104,8 +110,7 @@ public class AuthController {
 
         JwtResponse response = new JwtResponse(jwt, expiryMillis);
 
-        String resetUrl = "http://192.168.1.18:8080/reset-password?token=" + jwt;
-
+        String resetUrl = baseUrl + "/reset-password?token=" + jwt;
         emailService.sendEmail(emailId, user.get().getName(), "forgot-password", resetUrl);
 
         return ResponseEntity.ok("Password reset link sent to your email");
@@ -113,7 +118,7 @@ public class AuthController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+    public ResponseEntity<?> resetPassword(@RequestParam String token, @RequestParam String newPassword) throws MessagingException {
 
         String email = jwtUtil.extractUsername(token);
 
@@ -128,6 +133,10 @@ public class AuthController {
 
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+
+        String loginUrl = baseUrl + "/login";
+        String name = userRepository.findByEmail(jwtUtil.extractUsername(token)).get().getName();
+        emailService.sendEmail(jwtUtil.extractUsername(token), name, "reset-password-success", loginUrl);
 
         return ResponseEntity.ok("Password reset successful");
     }
