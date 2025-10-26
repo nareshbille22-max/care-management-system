@@ -36,27 +36,13 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http.cors()  // Enable CORS
-//                .and()
-//                .csrf(csrf -> csrf.disable())
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/signup", "/authenticate").permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-//        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-//        return http.build();
-//    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Lambda-based CORS
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/signup", "/authenticate").permitAll()
+                        .requestMatchers("/signup", "/login","/forgot-password","/reset-password").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

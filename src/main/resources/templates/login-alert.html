@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${subject}">Login Alert</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f5f7fa; margin:0; padding:0; }
+        .container { max-width:600px; margin:30px auto; background:#fff; padding:30px; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.1); }
+        h2 { color:#2e6c80; margin-top:0; }
+        p { color:#555; line-height:1.6; }
+        .footer { text-align:left; margin-top:30px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 th:text="${title}">New Login Detected</h2>
+    <p>Hi <b th:text="${name}">User</b>,</p>
+    <p th:text="${message}">
+        We noticed a login to your CareBuddy account. If this was you, no action is needed. If you did not login, please reset your password immediately.
+    </p>
+
+    <p>
+        Login Time: <span th:text="${loginTime}"></span><br>
+        IP Address: <span th:text="${ipAddress}"></span>
+    </p>
+
+    <p class="footer">Thanks!</p>
+</div>
+</body>
+</html>
