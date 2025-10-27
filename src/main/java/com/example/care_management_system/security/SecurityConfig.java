@@ -65,7 +65,7 @@ public class SecurityConfig {
                 List.of("http://127.0.0.1:5500",
                         "http://127.0.0.1:5501",
                         "http://localhost:3000",
-                        "https://nareshbille22-max.github.io","https://nareshbille22-max.github.io/care-buddy-frontend/"));
+                        "https://nareshbille22-max.github.io"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true); // if your frontend sends cookies or auth headers

@@ -14,13 +14,12 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    // secret key should be at least 256 bits for HS256
-    private final String SECRET = "your_very_long_secret_key_that_should_be_secure_and_at_least_256_bits";
-
     private SecretKey secretKey;
 
     @PostConstruct
     public void init() {
+        // secret key should be at least 256 bits for HS256
+        String SECRET = "your_very_long_secret_key_that_should_be_secure_and_at_least_256_bits";
         secretKey = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -60,28 +59,28 @@ public class JwtUtil {
     }
 
     private String createToken(String subject) {
-        long expirationTime = 1000L * 60 * 60 * 10; // 10 hours
-
+        // 10 hours
+        long EXPIRATION_TIME_FOR_JWT_TOKEN = 1000L * 60 * 60 * 10;
         return Jwts.builder()
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_FOR_JWT_TOKEN))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
     private String createToken2(String subject) {
-        long expirationTime = 1000L * 60 * 5; // 5 minutes
-
+        // 10 minutes
+        long EXPIRATION_TIME_FOR_RESET_PASSWORD_TOKEN = 1000L * 60 * 60;
         return Jwts.builder()
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_FOR_RESET_PASSWORD_TOKEN))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // Validate token against user details
+    // Validating token against user details
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));

@@ -112,7 +112,7 @@ public class AuthController {
 
         String resetUrl = baseUrl + "?token=" + jwt;
         emailService.sendEmail(emailId, user.get().getName(), "forgot-password", resetUrl);
-        return ResponseEntity.ok("Password reset link sent to your email");
+        return ResponseEntity.ok("Password reset link sent to your email, valid for one hour only");
 
     }
 
