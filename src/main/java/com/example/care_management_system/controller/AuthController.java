@@ -51,7 +51,7 @@ public class AuthController {
     @Autowired
     private EmailService emailService;
 
-    @Value("${app.base.url}")
+    @Value("${frontend.password-reset.url}")
     private String baseUrl;
 
     @PostMapping("/signup")
@@ -140,6 +140,5 @@ public class AuthController {
 
         return ResponseEntity.ok("Password reset successful");
     }
-
 
 }
