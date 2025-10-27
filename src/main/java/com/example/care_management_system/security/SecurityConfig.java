@@ -40,7 +40,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Lambda-based CORS
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/signup", "/login","/forgot-password","/reset-password").permitAll()
                         .anyRequest().authenticated()
@@ -53,11 +53,15 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // CORS configuration bean
+    // CORS configuration
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://127.0.0.1:5500", "http://127.0.0.1:5501", "http://localhost:3000"));
+        configuration.setAllowedOrigins(
+                List.of("http://127.0.0.1:5500",
+                        "http://127.0.0.1:5501",
+                        "http://localhost:3000",
+                        "https://nareshbille22-max.github.io","https://nareshbille22-max.github.io/care-buddy-frontend/"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true); // if your frontend sends cookies or auth headers
