@@ -76,7 +76,7 @@ public class EmailService {
             helper.setText(htmlContent, true);
 
             mailSender.send(message);
-            logger.info("Email sent successfully to {}", to);
+
         } catch (MessagingException e) {
             logger.error("Error sending email to {}", e.getMessage());
             throw e;

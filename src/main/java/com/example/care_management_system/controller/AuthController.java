@@ -89,7 +89,7 @@ public class AuthController {
 
         Optional<User> user = userRepository.findByEmail(jwtUtil.extractUsername(jwt));
 
-        String loginUrl = baseUrl + "/reset-password";
+        String loginUrl = baseUrl;
         emailService.sendEmail(authRequest.getEmail(), user.get().getName(), "login-success", loginUrl);
 
         return ResponseEntity.ok(response);
@@ -110,9 +110,8 @@ public class AuthController {
 
         JwtResponse response = new JwtResponse(jwt, expiryMillis);
 
-        String resetUrl = baseUrl + "/reset-password?token=" + jwt;
+        String resetUrl = baseUrl + "?token=" + jwt;
         emailService.sendEmail(emailId, user.get().getName(), "forgot-password", resetUrl);
-
         return ResponseEntity.ok("Password reset link sent to your email");
 
     }
